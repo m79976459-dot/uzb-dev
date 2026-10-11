@@ -2,562 +2,207 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Muhriddin — PHP & Python Dasturchi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c1626">
+<title>Muhriddin — Bot dasturchi</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  :root{
-    --bg:#08070f;
-    --card:rgba(255,255,255,.055);
-    --stroke:rgba(255,255,255,.1);
-    --txt:#eeecf6;
-    --muted:#9a98b3;
-    --acc:#8b5cf6;
-    --acc2:#22d3ee;
-    --acc3:#f472b6;
-    --ok:#34d399;
-  }
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Poppins',system-ui,-apple-system,sans-serif;
-    background:var(--bg);
-    color:var(--txt);
-    overflow-x:hidden;
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-    padding-bottom:110px; /* admin bar uchun joy */
-  }
+:root{--bg:#0c1626;--card:#14243b;--card2:#1b3050;--text:#eef3fa;--muted:#9db0c9;--amber:#ffb03a;--teal:#2fd3b5;--pink:#ff6b9a;--blue:#3aa0ff}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+.wrap{max-width:600px;margin:0 auto;padding:22px 16px calc(40px + env(safe-area-inset-bottom))}
+h2{font-size:1.35rem;margin:38px 0 6px}
+.sub{color:var(--muted);font-size:.93rem;margin-bottom:16px}
 
-  /* ===== Fon ===== */
-  .bg-blobs{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
-  .blob{
-    position:absolute;border-radius:50%;
-    filter:blur(90px);opacity:.5;
-    animation:float 16s ease-in-out infinite;
-  }
-  .blob.b1{width:360px;height:360px;background:#8b5cf6;top:-120px;left:-120px}
-  .blob.b2{width:320px;height:320px;background:#22d3ee;bottom:15%;right:-140px;animation-delay:-5s;opacity:.35}
-  .blob.b3{width:280px;height:280px;background:#f472b6;top:45%;left:55%;animation-delay:-9s;opacity:.3}
-  @keyframes float{
-    0%,100%{transform:translate(0,0) scale(1)}
-    33%{transform:translate(50px,-40px) scale(1.12)}
-    66%{transform:translate(-40px,35px) scale(.94)}
-  }
-  .grid-overlay{
-    position:fixed;inset:0;z-index:-1;pointer-events:none;
-    background-image:
-      linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
-    background-size:46px 46px;
-    mask-image:radial-gradient(circle at 50% 25%,#000 0%,transparent 72%);
-    -webkit-mask-image:radial-gradient(circle at 50% 25%,#000 0%,transparent 72%);
-  }
+/* HERO */
+.hero{text-align:center;padding-top:28px}
+.photo{position:relative;width:176px;height:176px;margin:0 auto 18px}
+.photo img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:4px solid var(--amber);background:var(--card)}
+.photo .st{position:absolute;right:-38px;bottom:-12px;width:92px;height:92px}
+h1{font-size:2rem;line-height:1.2}
+.role{color:var(--amber);font-weight:bold;margin-top:6px}
+.lead{color:var(--muted);margin:12px auto 20px;max-width:430px}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--amber);color:#1b1200;font-weight:bold;text-decoration:none;padding:13px 24px;border-radius:14px;min-height:48px}
+.btn.alt{background:transparent;color:var(--text);border:2px solid var(--blue)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:30px}
+.stat{background:var(--card);border-radius:16px;padding:14px 6px;text-align:center}
+.stat b{display:block;font-size:1.45rem;color:var(--amber)}
+.stat span{font-size:.78rem;color:var(--muted)}
 
-  /* ===== Xush kelibsiz ===== */
-  #welcome{
-    position:fixed;inset:0;z-index:9999;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 50% 50%,#181330 0%,#08070f 72%);
-    transition:opacity .9s ease,visibility .9s ease;
-    padding:0 24px;
-  }
-  #welcome.hide{opacity:0;visibility:hidden}
-  .w-icon{
-    font-size:3rem;margin-bottom:18px;
-    animation:pop .8s cubic-bezier(.2,1.6,.4,1), wave 1.6s ease-in-out 1s infinite;
-    display:inline-block;
-  }
-  @keyframes wave{
-    0%,100%{transform:rotate(0)}
-    25%{transform:rotate(20deg)}
-    75%{transform:rotate(-15deg)}
-  }
-  .welcome-text{
-    font-size:clamp(1.7rem,7.5vw,2.5rem);
-    font-weight:800;letter-spacing:.5px;
-    background:linear-gradient(90deg,#8b5cf6,#22d3ee,#f472b6,#8b5cf6);
-    background-size:300% 100%;
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-    animation:shine 3s linear infinite;
-    text-align:center;
-  }
-  .welcome-sub{
-    margin-top:12px;color:var(--muted);font-size:.78rem;
-    letter-spacing:4px;text-transform:uppercase;
-    animation:fadeUp 1s .3s both;
-  }
-  .loader{
-    margin-top:32px;width:140px;height:3px;border-radius:99px;
-    background:rgba(255,255,255,.1);overflow:hidden;
-  }
-  .loader::after{
-    content:"";display:block;height:100%;width:0;
-    background:linear-gradient(90deg,var(--acc),var(--acc2));
-    border-radius:99px;
-    animation:load 1.7s ease forwards;
-  }
-  @keyframes load{to{width:100%}}
-  @keyframes shine{to{background-position:300% 0}}
-  @keyframes pop{0%{opacity:0;transform:scale(.4) rotate(-30deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* ANIMATSIYALAR (tabiiy stikerlar) */
+.st{animation:float 3.4s ease-in-out infinite;filter:drop-shadow(0 6px 8px rgba(0,0,0,.4))}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+.arm{transform-origin:78px 66px;animation:wave 1.6s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-26deg)}}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.note{animation:rise 2.4s ease-in infinite;opacity:0}
+.note:nth-of-type(2){animation-delay:.8s}.note:nth-of-type(3){animation-delay:1.6s}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:1}100%{transform:translateY(-16px);opacity:0}}
+.flame{transform-box:fill-box;transform-origin:top;animation:flame .25s ease-in-out infinite alternate}
+@keyframes flame{from{transform:scaleY(.8)}to{transform:scaleY(1.25)}}
+.twinkle{animation:tw 1.8s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.2}50%{opacity:1}}
+.beat{transform-box:fill-box;transform-origin:center;animation:beat 1.2s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 
-  /* ===== Konteyner ===== */
-  .wrap{max-width:520px;margin:0 auto;padding:26px 18px 0;position:relative;z-index:1}
+/* BOTLAR MENYUSI */
+.menu{display:grid;gap:14px}
+.bot{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);border-radius:22px;padding:16px;position:relative;overflow:hidden;transition:transform .15s}
+.bot:active{transform:scale(.97)}
+.bot.music{background:linear-gradient(135deg,#1d3d63,#14243b 70%);border:1px solid #2b5a8e}
+.bot.smm{background:linear-gradient(135deg,#3a2350,#14243b 70%);border:1px solid #6a3d8f}
+.bot .st{flex:0 0 92px;width:92px;height:92px}
+.bot h3{font-size:1.15rem;line-height:1.25}
+.bot p{color:var(--muted);font-size:.88rem;margin:3px 0 8px}
+.go{display:inline-block;font-weight:bold;font-size:.88rem;padding:7px 14px;border-radius:99px}
+.music .go{background:var(--blue);color:#06182b}
+.smm .go{background:var(--pink);color:#2a0716}
 
-  /* ===== Hero ===== */
-  .hero{text-align:center;animation:fadeUp .9s .1s both}
-  .avatar-ring{
-    width:154px;height:154px;margin:0 auto 20px;position:relative;
-    border-radius:50%;padding:4px;
-    background:conic-gradient(from 0deg,var(--acc),var(--acc2),var(--acc3),var(--acc));
-    animation:spin 7s linear infinite;
-    box-shadow:0 0 50px rgba(139,92,246,.55);
-  }
-  .avatar-ring::before{
-    content:"";position:absolute;inset:-14px;border-radius:50%;z-index:-1;
-    background:radial-gradient(circle,rgba(139,92,246,.4),transparent 70%);
-    animation:pulse 3.2s ease-in-out infinite;
-  }
-  .avatar-ring img{
-    width:100%;height:100%;object-fit:cover;border-radius:50%;
-    border:4px solid var(--bg);display:block;
-    animation:spin 7s linear infinite reverse;
-  }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  @keyframes pulse{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.18);opacity:.35}}
+/* RASMLAR */
+.gal{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;margin:0 -16px;padding-left:16px;padding-right:16px}
+.gal figure{flex:0 0 78%;scroll-snap-align:center}
+.gal img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:20px;background:var(--card);display:block}
+.gal figcaption{font-size:.82rem;color:var(--muted);margin-top:6px;text-align:center}
 
-  .status-pill{
-    display:inline-flex;align-items:center;gap:7px;
-    font-size:.7rem;font-weight:600;
-    padding:6px 14px;border-radius:99px;
-    background:rgba(52,211,153,.12);
-    border:1px solid rgba(52,211,153,.35);
-    color:#6ee7b7;margin-bottom:14px;
-    animation:fadeUp .9s .25s both;
-  }
-  .status-pill .dot{
-    width:7px;height:7px;border-radius:50%;background:var(--ok);
-    box-shadow:0 0 10px var(--ok);
-    animation:blink 1.6s ease-in-out infinite;
-  }
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+/* KO'NIKMALAR */
+.skills{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.skill{background:var(--card);border-radius:18px;padding:16px 14px}
+.skill i{display:flex;width:44px;height:44px;border-radius:14px;align-items:center;justify-content:center;font-style:normal;font-weight:bold;font-size:.85rem;margin-bottom:10px}
+.skill h3{font-size:1rem}
+.skill p{color:var(--muted);font-size:.84rem;margin-top:2px}
+.skill.wide{grid-column:1/-1}
 
-  .name{
-    font-size:clamp(1.9rem,9vw,2.5rem);
-    font-weight:800;line-height:1.1;letter-spacing:-.5px;
-    background:linear-gradient(180deg,#fff 30%,#b8a8ff 100%);
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-    margin-bottom:8px;
-  }
-  .role-line{
-    font-size:.95rem;color:var(--muted);line-height:1.6;
-    margin-bottom:6px;
-  }
-  .role-line b{
-    background:linear-gradient(90deg,var(--acc2),var(--acc));
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-    font-weight:700;
-  }
-  .tagline{
-    font-size:.83rem;color:#7d7b95;
-    margin-top:6px;line-height:1.6;
-  }
-
-  /* ===== Bo'limlar ===== */
-  section{margin-top:26px}
-  .card{
-    background:var(--card);
-    border:1px solid var(--stroke);
-    border-radius:24px;
-    padding:24px 20px;
-    backdrop-filter:blur(16px);
-    -webkit-backdrop-filter:blur(16px);
-    position:relative;overflow:hidden;
-    box-shadow:0 12px 40px rgba(0,0,0,.25);
-  }
-  .card::before{
-    content:"";position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
-  }
-  .sec-title{
-    font-size:1.1rem;font-weight:700;margin-bottom:16px;
-    display:flex;align-items:center;gap:12px;
-  }
-  .ico{
-    width:38px;height:38px;border-radius:12px;
-    display:grid;place-items:center;
-    font-size:1.15rem;
-    background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(34,211,238,.18));
-    border:1px solid rgba(139,92,246,.35);
-    box-shadow:0 6px 18px rgba(139,92,246,.25);
-  }
-
-  /* Men haqimda */
-  .about-text{
-    color:#c8c6da;font-size:.9rem;line-height:1.85;
-    letter-spacing:.1px;
-  }
-  .about-text b{color:#fff;font-weight:600}
-  .about-text .hl{
-    background:linear-gradient(90deg,var(--acc2),var(--acc));
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;font-weight:700;
-  }
-
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
-  .stat{
-    text-align:center;padding:16px 8px;border-radius:16px;
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--stroke);
-    transition:.4s;
-  }
-  .stat:active{transform:scale(.96)}
-  .stat .num{
-    font-size:1.4rem;font-weight:800;
-    background:linear-gradient(135deg,var(--acc2),var(--acc));
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-    line-height:1;
-  }
-  .stat .lbl{
-    font-size:.62rem;color:var(--muted);
-    text-transform:uppercase;letter-spacing:.8px;
-    margin-top:6px;font-weight:500;
-  }
-
-  /* Xizmatlar */
-  .services{display:flex;flex-direction:column;gap:12px}
-  .service{
-    display:flex;gap:14px;align-items:flex-start;
-    padding:16px;border-radius:18px;
-    background:rgba(255,255,255,.035);
-    border:1px solid var(--stroke);
-    transition:.4s cubic-bezier(.2,.8,.3,1);
-    position:relative;overflow:hidden;
-  }
-  .service::before{
-    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
-    background:linear-gradient(180deg,var(--acc),var(--acc2));
-    opacity:0;transition:.4s;
-  }
-  .service:hover::before,.service:active::before{opacity:1}
-  .service:hover,.service:active{
-    background:rgba(139,92,246,.1);
-    border-color:rgba(139,92,246,.4);
-    transform:translateY(-2px);
-  }
-  .service .emoji{
-    font-size:1.35rem;flex-shrink:0;
-    width:46px;height:46px;border-radius:14px;
-    display:grid;place-items:center;
-    background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(244,114,182,.15));
-    border:1px solid rgba(255,255,255,.08);
-  }
-  .service h4{
-    font-size:.95rem;font-weight:600;
-    margin-bottom:4px;color:#fff;
-  }
-  .service p{
-    font-size:.79rem;color:var(--muted);
-    line-height:1.6;
-  }
-
-  /* Galereya */
-  .gallery{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .photo{
-    position:relative;border-radius:20px;overflow:hidden;
-    border:1px solid var(--stroke);
-    aspect-ratio:3/4;
-    background:linear-gradient(135deg,#1a1a2e,#12121f);
-    transition:.5s;
-  }
-  .photo img{
-    width:100%;height:100%;object-fit:cover;
-    display:block;transition:transform .6s cubic-bezier(.2,.8,.3,1);
-  }
-  .photo:active img,.photo:hover img{transform:scale(1.08)}
-  .photo::after{
-    content:"";position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(180deg,transparent 40%,rgba(8,7,15,.9));
-  }
-  .photo .cap{
-    position:absolute;bottom:12px;left:12px;right:12px;z-index:2;
-    font-size:.72rem;color:#e2e0ee;
-    font-weight:500;line-height:1.4;
-  }
-  .photo .cap .badge{
-    display:inline-block;
-    font-size:.6rem;padding:3px 8px;border-radius:99px;
-    background:rgba(139,92,246,.35);
-    border:1px solid rgba(139,92,246,.5);
-    color:#d8cfff;margin-bottom:5px;
-    font-weight:600;letter-spacing:.3px;
-  }
-
-  /* ===== ADMIN — pastda qotib turadi ===== */
-  .admin-bar{
-    position:fixed;
-    left:0;right:0;bottom:0;
-    z-index:1000;
-    padding:14px 16px calc(14px + env(safe-area-inset-bottom));
-    background:linear-gradient(180deg,rgba(8,7,15,0),rgba(8,7,15,.92) 45%,rgba(8,7,15,1));
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
-    display:flex;justify-content:center;
-    animation:slideUp .8s .6s both;
-  }
-  @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-
-  .admin-btn{
-    display:flex;align-items:center;gap:12px;
-    padding:9px 22px 9px 10px;
-    border-radius:99px;
-    background:linear-gradient(135deg,rgba(139,92,246,.35),rgba(34,211,238,.25));
-    border:1px solid rgba(139,92,246,.55);
-    text-decoration:none;color:#fff;
-    box-shadow:0 8px 32px rgba(139,92,246,.45),inset 0 1px 0 rgba(255,255,255,.15);
-    transition:.35s cubic-bezier(.2,.8,.3,1);
-    max-width:340px;width:100%;
-    position:relative;
-  }
-  .admin-btn:active{transform:scale(.96)}
-  .admin-btn::after{
-    content:"";position:absolute;inset:-2px;border-radius:99px;
-    background:linear-gradient(135deg,var(--acc),var(--acc2));
-    filter:blur(12px);opacity:.5;z-index:-1;
-    animation:pulse 3s ease-in-out infinite;
-  }
-  .admin-avatar{
-    width:48px;height:48px;border-radius:50%;
-    overflow:hidden;flex-shrink:0;
-    border:2px solid rgba(255,255,255,.85);
-    box-shadow:0 0 14px rgba(34,211,238,.7);
-    position:relative;
-  }
-  .admin-avatar img{
-    width:100%;height:100%;object-fit:cover;display:block;
-  }
-  .admin-avatar .online-dot{
-    position:absolute;bottom:0;right:0;
-    width:13px;height:13px;border-radius:50%;
-    background:var(--ok);
-    border:2px solid #0f0d1c;
-    box-shadow:0 0 8px var(--ok);
-  }
-  .admin-info{flex:1;text-align:left;min-width:0}
-  .admin-info .role{
-    font-size:.58rem;text-transform:uppercase;
-    letter-spacing:1.6px;color:#c4b5fd;
-    font-weight:700;margin-bottom:1px;
-  }
-  .admin-info .nick{
-    font-size:.9rem;font-weight:700;
-    color:#fff;line-height:1.1;
-  }
-  .admin-info .cta{
-    font-size:.66rem;color:#a9a7c4;margin-top:2px;
-  }
-  .admin-arrow{
-    font-size:1.1rem;color:#d8cfff;
-    flex-shrink:0;
-    animation:arrowMove 1.6s ease-in-out infinite;
-  }
-  @keyframes arrowMove{
-    0%,100%{transform:translateX(0)}
-    50%{transform:translateX(4px)}
-  }
-
-  /* Footer */
-  footer{
-    text-align:center;margin-top:30px;
-    color:var(--muted);font-size:.72rem;
-    animation:fadeUp 1s .4s both;
-    padding-bottom:10px;
-  }
-  footer .heart{color:var(--acc3)}
-
-  /* Scroll reveal */
-  .reveal{
-    opacity:0;transform:translateY(34px);
-    transition:.9s cubic-bezier(.2,.8,.3,1);
-  }
-  .reveal.show{opacity:1;transform:none}
-
-  @media (max-width:360px){
-    .gallery{grid-template-columns:1fr}
-    .stats{grid-template-columns:1fr 1fr}
-    .name{font-size:1.7rem}
-  }
+.contact{background:linear-gradient(135deg,#2a3f1f,#14243b);border-radius:22px;padding:24px 18px;text-align:center;margin-top:36px;border:1px solid #3d6b2a}
+.contact h2{margin:0 0 4px}
+.contact p{color:var(--muted);margin-bottom:16px}
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding-top:22px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.note{opacity:1}}
+@media (min-width:520px){.gal figure{flex-basis:46%}}
 </style>
 </head>
 <body>
-
-<!-- Fon -->
-<div class="bg-blobs">
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
-</div>
-<div class="grid-overlay"></div>
-
-<!-- Xush kelibsiz -->
-<div id="welcome">
-  <div class="w-icon">👋</div>
-  <div class="welcome-text">Xush kelibsiz!</div>
-  <div class="welcome-sub">Muhriddin Portfolio</div>
-  <div class="loader"></div>
-</div>
-
 <div class="wrap">
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="avatar-ring">
-      <img src="rasm1.jpg" alt="Muhriddin">
-    </div>
-    <div class="status-pill">
-      <span class="dot"></span> Hozir online · Buyurtma qabul qilaman
-    </div>
-    <h1 class="name">Muhriddin</h1>
-    <p class="role-line">
-      <b>PHP</b> &amp; <b>Python</b> dasturchi
-    </p>
-    <p class="tagline">
-      2006 yildan beri kod yozaman · Bot yaratish bo'yicha mutaxassis
-    </p>
-  </header>
+<!-- HERO -->
+<section class="hero">
+  <div class="photo">
+    <img data-ph="M" src="muhriddin1.jpg" alt="Muhriddin">
+    <svg class="st" viewBox="0 0 100 100" aria-hidden="true">
+      <line x1="50" y1="14" x2="50" y2="24" stroke="#ffb03a" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="50" cy="12" r="4" fill="#ffb03a"/>
+      <rect x="22" y="24" width="56" height="46" rx="16" fill="#3aa0ff"/>
+      <rect x="22" y="24" width="56" height="20" rx="14" fill="#fff" opacity=".18"/>
+      <rect x="30" y="34" width="40" height="26" rx="10" fill="#0c1626"/>
+      <ellipse class="eye" cx="42" cy="47" rx="4.5" ry="5.5" fill="#7dffb2"/>
+      <ellipse class="eye" cx="58" cy="47" rx="4.5" ry="5.5" fill="#7dffb2"/>
+      <path d="M44 55q6 5 12 0" stroke="#7dffb2" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <rect x="30" y="72" width="40" height="22" rx="10" fill="#2a7fd0"/>
+      <circle cx="50" cy="83" r="4" fill="#ffb03a"/>
+      <g class="arm"><rect x="76" y="62" width="9" height="20" rx="4.5" fill="#3aa0ff" transform="rotate(-20 80 72)"/><circle cx="84" cy="58" r="5.5" fill="#ffb03a"/></g>
+      <rect x="15" y="74" width="9" height="18" rx="4.5" fill="#3aa0ff"/>
+    </svg>
+  </div>
+  <h1>Salom, men Muhriddin!</h1>
+  <p class="role">Bot dasturchi · PHP &amp; Python</p>
+  <p class="lead">2006-yilda tug'ilganman. 2 yildan beri Telegram botlar yozaman. G'oyangizni ishlaydigan, tez va barqaror botga aylantiraman.</p>
+  <div class="btns">
+    <a class="btn" href="#botlar">Botlarimni ko'rish</a>
+    <a class="btn alt" href="#aloqa">Buyurtma berish</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>2+</b><span>yil tajriba</span></div>
+    <div class="stat"><b>PHP</b><span>va Python</span></div>
+    <div class="stat"><b>24/7</b><span>ishlaydi</span></div>
+  </div>
+</section>
 
-  <!-- MEN HAQIMDA -->
-  <section class="reveal">
-    <div class="card">
-      <div class="sec-title"><span class="ico">👨‍💻</span> Men haqimda</div>
-      <p class="about-text">
-        Salom! Men <b>Muhriddin</b> — <span class="hl">2006</span> yilda tug'ilgan,
-        <b>PHP</b> va <b>Python</b> tillarida <span class="hl">3 yillik</span> tajribaga ega
-        dasturchiman. Telegram botlar, zamonaviy web saytlar va avtomatlashtirish
-        tizimlarini <b>noldan</b> professional darajada yarataman.
-        Har bir loyihaga mas'uliyat bilan yondashaman va mijozlarimga
-        <b>sifatli</b>, <b>tez</b> va <b>ishonchli</b> natija beraman.
-      </p>
-      <div class="stats">
-        <div class="stat"><div class="num">3+</div><div class="lbl">Yil tajriba</div></div>
-        <div class="stat"><div class="num">50+</div><div class="lbl">Loyihalar</div></div>
-        <div class="stat"><div class="num">100%</div><div class="lbl">Sifat</div></div>
-      </div>
-    </div>
-  </section>
+<!-- BOTLAR MENYUSI -->
+<h2 id="botlar">Admin yasagan botlar</h2>
+<p class="sub">Ustiga bosing, Telegramda bot ochiladi.</p>
+<div class="menu">
 
-  <!-- XIZMATLAR -->
-  <section class="reveal">
-    <div class="card">
-      <div class="sec-title"><span class="ico">⚡</span> Nima qila olaman</div>
-      <div class="services">
-        <div class="service">
-          <div class="emoji">🤖</div>
-          <div>
-            <h4>Telegram Botlar</h4>
-            <p>Admin bot, shop bot, kanal boshqaruv, avto-javob, to'lov botlari va boshqa turli botlar.</p>
-          </div>
-        </div>
-        <div class="service">
-          <div class="emoji">🌐</div>
-          <div>
-            <h4>Web Saytlar</h4>
-            <p>PHP asosida zamonaviy, tez ishlaydigan va barcha qurilmalarga moslashgan saytlar.</p>
-          </div>
-        </div>
-        <div class="service">
-          <div class="emoji">🐍</div>
-          <div>
-            <h4>Python Dasturlar</h4>
-            <p>Avtomatlashtirish, parsing, API integratsiya va turli foydali skriptlar yaratish.</p>
-          </div>
-        </div>
-        <div class="service">
-          <div class="emoji">💎</div>
-          <div>
-            <h4>Individual Buyurtmalar</h4>
-            <p>G'oyangizni tushunib, uni noldan professional darajada amalga oshirib beraman.</p>
-          </div>
-        </div>
-      </div>
+  <a class="bot music" href="https://t.me/maxsaveuz_bot" target="_blank" rel="noopener">
+    <svg class="st" viewBox="0 0 100 100" aria-hidden="true">
+      <g fill="#ffb03a"><text class="note" x="74" y="30" font-size="16">♪</text><text class="note" x="10" y="38" font-size="14">♫</text><text class="note" x="82" y="52" font-size="13">♪</text></g>
+      <path d="M22 54a28 28 0 0 1 56 0" fill="none" stroke="#1b1200" stroke-width="7" stroke-linecap="round"/>
+      <path d="M22 54a28 28 0 0 1 56 0" fill="none" stroke="#3aa0ff" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="50" cy="58" r="25" fill="#ffd9a8"/>
+      <ellipse class="eye" cx="41" cy="56" rx="3" ry="4" fill="#2b1a0a"/>
+      <ellipse class="eye" cx="59" cy="56" rx="3" ry="4" fill="#2b1a0a"/>
+      <circle cx="35" cy="66" r="4" fill="#ff9aa8" opacity=".6"/><circle cx="65" cy="66" r="4" fill="#ff9aa8" opacity=".6"/>
+      <path d="M42 67q8 8 16 0" fill="#fff" stroke="#2b1a0a" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="14" y="48" width="11" height="22" rx="5.5" fill="#3aa0ff"/><rect x="75" y="48" width="11" height="22" rx="5.5" fill="#3aa0ff"/>
+    </svg>
+    <div>
+      <h3>🎵 Musiqa bot</h3>
+      <p>Qo'shiq nomi yoki ijrochini yozing, musiqani darhol yuklab oling.</p>
+      <span class="go">Botga o'tish</span>
     </div>
-  </section>
+  </a>
 
-  <!-- RASMLAR -->
-  <section class="reveal">
-    <div class="card">
-      <div class="sec-title"><span class="ico">📸</span> Meni ko'ring</div>
-      <div class="gallery">
-        <div class="photo">
-          <img src="rasm1.jpg" alt="Muhriddin">
-          <div class="cap">
-            <span class="badge">Dasturchi</span><br>
-            Muhriddin
-          </div>
-        </div>
-        <div class="photo">
-          <img src="rasm2.jpg" alt="Ish jarayoni">
-          <div class="cap">
-            <span class="badge">Ish jarayoni</span><br>
-            Kod yozish paytida 💻
-          </div>
-        </div>
-      </div>
+  <a class="bot smm" href="https://t.me/salaseen_bot" target="_blank" rel="noopener">
+    <svg class="st" viewBox="0 0 100 100" aria-hidden="true">
+      <g fill="#fff"><circle class="twinkle" cx="16" cy="24" r="2"/><circle class="twinkle" style="animation-delay:.6s" cx="84" cy="30" r="2.2"/><circle class="twinkle" style="animation-delay:1.1s" cx="20" cy="70" r="1.8"/></g>
+      <g transform="rotate(35 50 50)">
+        <path class="flame" d="M42 76q8 24 16 0z" fill="#ffb03a"/>
+        <path class="flame" d="M46 76q4 14 8 0z" fill="#fff3b0"/>
+        <path d="M50 8q22 18 18 52H32q-4-34 18-52z" fill="#f4f6fb"/>
+        <path d="M50 8q22 18 18 52H58q4-30-8-52z" fill="#d6dbe8"/>
+        <path d="M32 60l-10 14 14-4zM68 60l10 14-14-4z" fill="#ff6b9a"/>
+        <circle cx="50" cy="38" r="9" fill="#3aa0ff" stroke="#8aa0c0" stroke-width="3"/>
+        <circle cx="47" cy="35" r="3" fill="#fff" opacity=".7"/>
+      </g>
+      <path class="beat" d="M80 76c-6-6-12-1-8 4l8 8 8-8c4-5-2-10-8-4z" fill="#ff6b9a"/>
+    </svg>
+    <div>
+      <h3>🚀 Nakrutka botimiz</h3>
+      <p>Obunachi, layk va ko'rishlarni tez va qulay narxda oshiring.</p>
+      <span class="go">Botga o'tish</span>
     </div>
-  </section>
-
-  <footer>
-    © <span id="year"></span> Muhriddin · <span class="heart">♥</span> bilan yaratildi
-  </footer>
+  </a>
 
 </div>
 
-<!-- ADMIN — pastda qotib turadi -->
-<div class="admin-bar">
-  <a class="admin-btn" href="https://t.me/muhriddin_ouu" target="_blank" rel="noopener">
-    <div class="admin-avatar">
-      <img src="rasm1.jpg" alt="Admin">
-      <div class="online-dot"></div>
-    </div>
-    <div class="admin-info">
-      <div class="role">Admin · Online</div>
-      <div class="nick">@muhriddin_ouu</div>
-      <div class="cta">Bog'lanish uchun bosing</div>
-    </div>
-    <div class="admin-arrow">→</div>
-  </a>
+<!-- RASMLAR -->
+<h2>Men haqimda</h2>
+<p class="sub">Yon tomonga suring.</p>
+<div class="gal">
+  <figure><img data-ph="1" src="muhriddin1.jpg" alt="Muhriddin"><figcaption>Muhriddin</figcaption></figure>
+  <figure><img data-ph="2" src="muhriddin2.jpg" alt="Ish jarayoni"><figcaption>Ish jarayonida</figcaption></figure>
+  <figure><img data-ph="3" src="muhriddin3.jpg" alt="Dasturchi"><figcaption>Kod yozish — mening ishim</figcaption></figure>
+</div>
+
+<!-- KO'NIKMALAR -->
+<h2>Nimalardan foydalanaman</h2>
+<p class="sub">Bot yaratishda ishlatadigan asosiy vositalarim.</p>
+<div class="skills">
+  <div class="skill"><i style="background:#7a86b8;color:#10152b">PHP</i><h3>PHP</h3><p>Tez ishlaydigan Telegram botlar va admin panellar.</p></div>
+  <div class="skill"><i style="background:#ffd34e;color:#1d2a4a">Py</i><h3>Python</h3><p>Aiogram bilan kuchli, zamonaviy botlar.</p></div>
+  <div class="skill"><i style="background:var(--teal);color:#06231d">MY</i><h3>MySQL</h3><p>Foydalanuvchi va buyurtmalar bazasi.</p></div>
+  <div class="skill"><i style="background:var(--blue);color:#06182b">SQL</i><h3>SQL</h3><p>Tezkor so'rovlar, statistika va hisobotlar.</p></div>
+  <div class="skill"><i style="background:var(--pink);color:#2a0716">WWW</i><h3>Hosting</h3><p>Botni serverga o'rnatish, domen va SSL ulash.</p></div>
+  <div class="skill"><i style="background:#e8edf5;color:#111a2b">Git</i><h3>GitHub</h3><p>Kod saqlash, versiyalar va xavfsiz yangilash.</p></div>
+</div>
+
+<!-- ALOQA -->
+<section class="contact" id="aloqa">
+  <h2>O'z botingiz kerakmi?</h2>
+  <p>Menga yozing, narx va muddatni tezda aytaman.</p>
+  <a class="btn" href="https://t.me/USERNAME" target="_blank" rel="noopener">Telegramda yozish</a>
+</section>
+<footer>© 2026 Muhriddin</footer>
 </div>
 
 <script>
-  // Yil
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  // Xush kelibsiz 2 sekunddan keyin yo'qoladi
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('welcome').classList.add('hide');
-    }, 2000);
-  });
-
-  // Scroll reveal
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        e.target.style.transitionDelay = (i * 0.08) + 's';
-        e.target.classList.add('show');
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+// Rasm topilmasa, chiroyli joy egasi ko'rsatiladi
+document.querySelectorAll('img[data-ph]').forEach(function(img){
+  img.addEventListener('error',function(){
+    var t=img.dataset.ph;
+    img.src='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 125"><rect width="100" height="125" fill="#14243b"/><text x="50" y="72" font-size="40" text-anchor="middle" fill="#ffb03a" font-family="Arial">'+t+'</text></svg>');
+  },{once:true});
+});
 </script>
-
 </body>
 </html>
