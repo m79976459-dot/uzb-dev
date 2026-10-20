@@ -1,75 +1,939 @@
+
 <!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Muhriddin — Bot dasturchi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b12">
+<meta name="description" content="Devcoder — PHP dasturchi, Telegram botlar yaratish va dasturlash xizmatlari.">
+<title>Devcoder — Dasturchi portfolio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--text:#16233a;--muted:#62728c;--blue:#2a7de1;--line:#e3e9f2}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-.wrap{max-width:520px;margin:0 auto;padding:36px 18px calc(36px + env(safe-area-inset-bottom))}
-.hero{text-align:center;margin-bottom:28px}
-.hero .ic{width:68px;height:68px;margin:0 auto 14px;animation:fl 3.2s ease-in-out infinite}
-@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-h1{font-size:1.8rem}
-.hero p{color:var(--muted);margin-top:4px}
-.badge{display:inline-flex;align-items:center;gap:6px;background:#e4efff;color:var(--blue);font-weight:600;font-size:.9rem;padding:6px 14px;border-radius:99px;margin-top:12px}
-h2{font-size:1.05rem;margin:28px 0 10px}
-.row{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:12px;font-weight:600;font-size:.92rem}
-.chip svg{width:20px;height:20px}
-.bot{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;text-decoration:none;color:var(--text);transition:transform .15s}
-.bot:active{transform:scale(.97)}
-.bot .ic{flex:0 0 52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;animation:fl 3.2s ease-in-out infinite}
-.bot .ic svg{width:30px;height:30px}
-.bot b{display:block}
-.bot span{color:var(--muted);font-size:.86rem}
-.bot .ar{margin-left:auto;color:var(--blue);font-size:1.3rem}
-.end{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);text-align:center}
-.end p{color:var(--muted);font-size:.9rem;margin-bottom:12px}
-.soc{display:flex;flex-direction:column;gap:10px}
-.soc a{display:flex;align-items:center;gap:10px;justify-content:center;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;font-weight:600}
-.soc svg{width:22px;height:22px}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+:root {
+  --bg: #080b12;
+  --panel: #101620;
+  --panel2: #131c29;
+  --text: #f4f7fb;
+  --muted: #9aa7b9;
+  --green: #a3f76b;
+  --blue: #75a7ff;
+  --border: rgba(255,255,255,.09);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  top: -280px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(117,167,255,.10);
+  filter: blur(110px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+.container { width: min(1120px, 90%); margin: auto; }
+
+/* NAVBAR */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8,11,18,.84);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.logo {
+  font: 700 25px "Space Grotesk", sans-serif;
+  letter-spacing: -1.2px;
+}
+
+.logo span { color: var(--green); }
+
+.nav-links {
+  display: flex;
+  gap: 27px;
+  align-items: center;
+}
+
+.nav-links a {
+  font-size: 13px;
+  color: var(--muted);
+  transition: .25s;
+}
+
+.nav-links a:hover { color: var(--green); }
+
+.admin-btn {
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  padding: 10px 17px;
+  border-radius: 10px;
+  font-size: 13px;
+  transition: .25s;
+}
+
+.admin-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.menu-toggle {
+  display: none;
+  color: white;
+  background: none;
+  border: 0;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+/* HERO */
+.hero {
+  min-height: 650px;
+  display: flex;
+  align-items: center;
+  padding: 90px 0 80px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 14px var(--green);
+}
+
+h1 {
+  font: 700 clamp(44px, 6vw, 76px)/1.08 "Space Grotesk", sans-serif;
+  letter-spacing: -3.5px;
+}
+
+h1 .accent { color: var(--green); }
+
+.hero-text {
+  max-width: 540px;
+  color: var(--muted);
+  font-size: 15px;
+  margin-top: 24px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 32px;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform .25s, background .25s;
+}
+
+.btn:hover { transform: translateY(-3px); }
+
+.btn-primary {
+  color: #10180b;
+  background: var(--green);
+}
+
+.btn-primary:hover { background: #bcff96; }
+
+.btn-secondary {
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.035);
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,.08); }
+
+.hero-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 38px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.avatar-stack { display: flex; }
+
+.avatar-stack span {
+  width: 31px;
+  height: 31px;
+  margin-right: -7px;
+  display: grid;
+  place-items: center;
+  background: #192535;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.hero-note strong { color: var(--text); }
+
+/* CODE CARD */
+.code-card {
+  position: relative;
+  background: linear-gradient(145deg, #131d2a, #0d121b);
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 35px 100px rgba(0,0,0,.25);
+  transform: rotate(1deg);
+}
+
+.code-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.traffic { display: flex; gap: 6px; }
+
+.traffic i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff7777;
+}
+
+.traffic i:nth-child(2) { background: #f6c66a; }
+.traffic i:nth-child(3) { background: #8eea91; }
+
+.file-name { font-size: 11px; color: var(--muted); }
+
+.code-content {
+  padding: 25px 0 15px;
+  font: 12px/2.2 monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.c-purple { color: #c5a4ff; }
+.c-green { color: #a3f76b; }
+.c-blue { color: #80baff; }
+.c-muted { color: #718096; }
+.c-orange { color: #ffbe85; }
+
+.code-bottom {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.floating-tag {
+  position: absolute;
+  right: -18px;
+  bottom: 75px;
+  padding: 13px 17px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #182332;
+  box-shadow: 0 12px 35px #0005;
+  font-size: 12px;
+}
+
+.floating-tag strong { color: var(--green); }
+
+/* SECTIONS */
+section { padding: 95px 0; }
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 38px;
+}
+
+.section-kicker {
+  color: var(--green);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font: 700 clamp(29px, 4vw, 43px)/1.2 "Space Grotesk", sans-serif;
+  letter-spacing: -1.7px;
+}
+
+.section-desc {
+  color: var(--muted);
+  font-size: 13px;
+  max-width: 390px;
+}
+
+/* ABOUT */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.panel {
+  padding: 30px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+}
+
+.panel h3 {
+  font: 600 21px "Space Grotesk", sans-serif;
+  margin-bottom: 14px;
+}
+
+.panel p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.skills { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+
+.skill {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.025);
+  font-size: 11px;
+}
+
+.skill b { color: var(--green); margin-right: 5px; }
+
+/* BOTS */
+.bots-section {
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,.018), transparent);
+}
+
+.bots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 17px;
+}
+
+.bot-card {
+  position: relative;
+  padding: 26px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  transition: .3s;
+  overflow: hidden;
+}
+
+.bot-card::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -100px;
+  top: -100px;
+  background: var(--glow, rgba(163,247,107,.13));
+  filter: blur(45px);
+  border-radius: 50%;
+  transition: .3s;
+}
+
+.bot-card:hover {
+  border-color: rgba(163,247,107,.35);
+  transform: translateY(-5px);
+}
+
+.bot-head {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 19px;
+}
+
+.bot-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: #1a2834;
+  color: var(--green);
+  font: 700 23px "Space Grotesk", sans-serif;
+  border: 1px solid var(--border);
+}
+
+.bot-name { font: 600 19px "Space Grotesk", sans-serif; }
+.bot-username { color: var(--muted); font-size: 11px; }
+
+.bot-card p {
+  color: var(--muted);
+  font-size: 13px;
+  min-height: 48px;
+}
+
+.bot-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 23px;
+  padding-top: 17px;
+  border-top: 1px solid var(--border);
+}
+
+.bot-label {
+  font-size: 10px;
+  color: var(--green);
+  letter-spacing: .6px;
+}
+
+.bot-link {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.bot-link:hover { color: var(--green); }
+
+/* SERVICES */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.service {
+  padding: 25px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.025);
+  transition: .25s;
+}
+
+.service:hover {
+  background: var(--panel2);
+  transform: translateY(-4px);
+}
+
+.service-number {
+  color: var(--green);
+  font: 600 12px monospace;
+}
+
+.service h3 {
+  font: 600 18px "Space Grotesk", sans-serif;
+  margin: 19px 0 9px;
+}
+
+.service p { color: var(--muted); font-size: 12px; }
+
+/* CONTACT */
+.contact-box {
+  position: relative;
+  text-align: center;
+  padding: 65px 30px;
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at top, rgba(163,247,107,.10), transparent 65%),
+    var(--panel);
+  border: 1px solid var(--border);
+}
+
+.contact-box h2 {
+  font: 700 clamp(30px, 5vw, 49px)/1.2 "Space Grotesk", sans-serif;
+  letter-spacing: -2px;
+}
+
+.contact-box p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 17px auto 25px;
+  max-width: 490px;
+}
+
+.contact-box .hero-actions { justify-content: center; }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 26px 0;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+footer p { color: var(--muted); font-size: 11px; }
+
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: var(--muted); font-size: 11px; }
+.footer-links a:hover { color: var(--green); }
+
+/* ANIMATION */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+@media (max-width: 850px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 45px; }
+  .hero { padding: 75px 0; }
+  .code-card { max-width: 560px; width: 100%; transform: none; }
+  .section-head { align-items: start; flex-direction: column; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links { gap: 15px; }
+}
+
+@media (max-width: 620px) {
+  .nav { min-height: 67px; }
+  .menu-toggle { display: block; }
+  .admin-btn { display: none; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 67px;
+    left: 0;
+    width: 100%;
+    padding: 20px 5%;
+    background: #0c111b;
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 12px 0; border-bottom: 1px solid var(--border); }
+
+  h1 { letter-spacing: -2px; }
+  .hero { min-height: auto; padding: 65px 0; }
+  section { padding: 68px 0; }
+  .about-grid, .bots-grid, .services-grid { grid-template-columns: 1fr; }
+  .panel, .bot-card { padding: 22px; }
+  .code-card { padding: 18px; }
+  .floating-tag { right: -5px; bottom: 45px; }
+  .contact-box { padding: 45px 20px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+}
 </style>
 </head>
-<body>
-<div class="wrap">
 
-<header class="hero">
-  <svg class="ic" viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="18" width="40" height="32" rx="11" fill="#2a7de1"/><rect x="19" y="26" width="26" height="16" rx="7" fill="#fff"/><circle cx="26" cy="34" r="3" fill="#16233a"/><circle cx="38" cy="34" r="3" fill="#16233a"/><line x1="32" y1="9" x2="32" y2="18" stroke="#2a7de1" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="8" r="3.5" fill="#ffb03a"/></svg>
-  <h1>Muhriddin</h1>
-  <p>Telegram bot dasturchi</p>
-  <div class="badge">⏱ 2 yillik tajriba</div>
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="logo" href="#home">dev<span>coder.</span></a>
+
+    <button class="menu-toggle" id="menuToggle"
+      aria-label="Menyuni ochish" aria-expanded="false"
+      aria-controls="navLinks">☰</button>
+
+    <nav class="nav-links" id="navLinks" aria-label="Asosiy menyu">
+      <a href="#home">Bosh sahifa</a>
+      <a href="#about">Men haqimda</a>
+      <a href="#bots">Botlarim</a>
+      <a href="#services">Xizmatlar</a>
+      <a href="#contact">Bog‘lanish</a>
+    </nav>
+
+    <a class="admin-btn" href="https://t.me/dasturchi_ou" target="_blank" rel="noopener noreferrer">
+      Admin bilan bog‘lan ↗
+    </a>
+  </div>
 </header>
 
-<h2>Qaysi tillarda ishlayman</h2>
-<div class="row">
-  <div class="chip"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="11" ry="7" fill="#7a86b8"/><text x="12" y="14.6" font-size="7" font-weight="bold" text-anchor="middle" fill="#fff">php</text></svg>PHP</div>
-  <div class="chip"><svg viewBox="0 0 24 24"><path d="M12 2c-4 0-4 1.5-4 3v2h4v1H5C3 8 2 10 2 12.5S3 17 5 17h2v-2.5C7 13 8.5 12 10 12h4c1.500 0 2.500-1 2.500-2.500V5c0-1.500-1.500-3-4.500-3z" fill="#3a76b0"/><path d="M12 22c4 0 4-1.500 4-3v-2h-4v-1h7c2 0 3-2 3-4.500S21 7 19 7h-2v2.500c0 1.500-1.500 2.500-3 2.500h-4c-1.500 0-2.500 1-2.500 2.500V19c0 1.500 1.500 3 4.500 3z" fill="#ffd34e"/></svg>Python</div>
-  <div class="chip"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3" fill="#00758f"/><path d="M4 6v12c0 1.700 3.600 3 8 3s8-1.300 8-3V6c0 1.700-3.600 3-8 3S4 7.700 4 6z" fill="#f29111"/></svg>MySQL</div>
-  <div class="chip"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.200 19.500c.5.100.7-.2.7-.5v-1.800c-2.800.6-3.400-1.300-3.400-1.300-.5-1.200-1.100-1.500-1.100-1.500-.9-.6.100-.6.100-.6 1 .1 1.500 1 1.500 1 .9 1.500 2.300 1.100 2.900.8.1-.7.4-1.100.6-1.300-2.200-.3-4.600-1.100-4.600-5 0-1.100.4-2 1-2.700-.1-.3-.4-1.300.1-2.700 0 0 .8-.3 2.800 1a9.500 9.500 0 0 1 5 0c1.900-1.300 2.800-1 2.800-1 .5 1.400.2 2.400.1 2.700.6.7 1 1.600 1 2.700 0 3.900-2.400 4.700-4.600 5 .4.3.7.900.7 1.800v2.700c0 .3.2.6.7.5A10 10 0 0 0 12 2z" fill="#16233a"/></svg>GitHub</div>
-</div>
+<main>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <div class="eyebrow"><span class="dot"></span> Dasturlash va kreativ g‘oyalar</div>
 
-<h2>Yasagan botlarim</h2>
-<a class="bot" href="https://t.me/maxsaveuz_bot" target="_blank" rel="noopener">
-  <div class="ic" style="background:#e4efff"><svg viewBox="0 0 24 24" fill="none" stroke="#2a7de1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3" fill="#2a7de1"/><circle cx="17" cy="16" r="3" fill="#2a7de1"/></svg></div>
-  <div><b>Musiqa bot</b><span>Qo'shiqni topib, yuklab beradi</span></div><div class="ar">›</div>
-</a>
-<a class="bot" href="https://t.me/salaseen_bot" target="_blank" rel="noopener">
-  <div class="ic" style="background:#ffeaf1"><svg viewBox="0 0 24 24" fill="none" stroke="#e0407a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.500 16.500c-1.500 1.300-2 5-2 5s3.700-.5 5-2c.7-.8.700-2.100-.1-2.900a2.100 2.100 0 0 0-2.900-.1z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.900A12.900 12.900 0 0 1 22 2c0 2.700-.8 7.500-6 11a22.400 22.400 0 0 1-4 2z"/></svg></div>
-  <div><b>Nakrutka botimiz</b><span>Obunachi, layk va ko'rishlar</span></div><div class="ar">›</div>
-</a>
+        <h1>G‘oyalarni<br>
+          <span class="accent">raqamli</span> olamga<br>
+          olib chiqaman.
+        </h1>
 
-<footer class="end">
-  <p>Admin profillari</p>
-  <div class="soc">
-    <a href="https://instagram.com/muhriddin_ou" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="#e0407a" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.500" cy="6.500" r="1" fill="#e0407a"/></svg>muhriddin_ou</a>
-    <a href="https://t.me/devloper_ou" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#2a9ee1"/><path d="M5.500 11.800l11-4.300c.5-.2 1 .1.800.9l-1.900 8.800c-.1.600-.5.800-1 .5l-2.800-2.100-1.400 1.300c-.2.200-.3.300-.6.300l.2-2.900 5.300-4.800c.2-.2 0-.3-.3-.1l-6.500 4.100-2.800-.9c-.6-.2-.6-.6.100-.9z" fill="#fff"/></svg>devloper_ou</a>
+        <p class="hero-text">
+          Salom! Men Devcoder — PHP va Telegram botlar bilan ishlaydigan
+          dasturchiman. G‘oyalarni foydali loyihalarga aylantirishni
+          va yangi texnologiyalar orqali imkoniyatlar yaratishni yaxshi ko‘raman.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#bots">Botlarimni ko‘r <span>↗</span></a>
+          <a class="btn btn-secondary" href="#contact">Men bilan bog‘lan</a>
+        </div>
+
+        <div class="hero-note">
+          <div class="avatar-stack">
+            <span>PHP</span><span>⌘</span><span>WEB</span>
+          </div>
+          <div><strong>Har bir g‘oya — yangi imkoniyat.</strong><br>
+            <span>O‘rganish · Yaratish · Rivojlanish</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-card reveal">
+        <div class="code-top">
+          <div class="traffic"><i></i><i></i><i></i></div>
+          <span class="file-name">developer.php</span>
+        </div>
+
+        <div class="code-content"><span class="c-purple">&lt;?php</span>
+
+<span class="c-blue">$developer</span> = [
+  <span class="c-green">'name'</span> =&gt; <span class="c-orange">'Devcoder'</span>,
+  <span class="c-green">'language'</span> =&gt; <span class="c-orange">'PHP'</span>,
+  <span class="c-green">'specialty'</span> =&gt; <span class="c-orange">'Telegram Bots'</span>,
+  <span class="c-green">'mindset'</span> =&gt; <span class="c-orange">'Keep Learning'</span>,
+];
+
+<span class="c-purple">function</span> <span class="c-blue">createProject</span>() {
+  <span class="c-purple">return</span> <span class="c-green">'Your idea, built with code.'</span>;
+}
+
+<span class="c-muted">// Har bir qator — yangi imkoniyat.</span>
+<span class="c-purple">?&gt;</span></div>
+
+        <div class="code-bottom">
+          <span>● PHP</span>
+          <span>UTF-8</span>
+          <span>Ready to create</span>
+        </div>
+
+        <div class="floating-tag">⌘ <strong>Code with purpose</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <div class="section-kicker">01 — Men haqimda</div>
+          <h2 class="section-title">Kod ortidagi inson.</h2>
+        </div>
+        <p class="section-desc">
+          Texnologiyaga qiziqish, tinimsiz o‘rganish va foydali loyihalar
+          yaratishga intilish — mening yo‘lim.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <article class="panel reveal">
+          <h3>Men kimman?</h3>
+          <p>
+            Men PHP tilida Telegram botlar yaratish bilan shug‘ullanaman.
+            Turli g‘oyalar ustida ishlayman, botlarning funksiyalarini
+            ishlab chiqaman va web dasturlash bo‘yicha bilimlarimni
+            muntazam oshirib boraman.
+          </p>
+          <p style="margin-top:13px">
+            Maqsadim — odamlarga qulaylik yaratadigan, sodda va foydali
+            raqamli mahsulotlar ishlab chiqish.
+          </p>
+        </article>
+
+        <article class="panel reveal">
+          <h3>Texnologiyalar</h3>
+          <p>Men foydalanadigan va o‘rganayotgan texnologiyalar.</p>
+          <div class="skills">
+            <span class="skill"><b>01</b> PHP</span>
+            <span class="skill"><b>02</b> Telegram Bot API</span>
+            <span class="skill"><b>03</b> HTML</span>
+            <span class="skill"><b>04</b> CSS</span>
+            <span class="skill"><b>05</b> MySQL</span>
+            <span class="skill"><b>06</b> JavaScript</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTS -->
+  <section class="bots-section" id="bots">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <div class="section-kicker">02 — Loyihalar</div>
+          <h2 class="section-title">Mening Telegram botlarim.</h2>
+        </div>
+        <p class="section-desc">
+          Loyihalar bilan tanishing. Kerakli botni tanlang va
+          uning Telegram sahifasiga to‘g‘ridan-to‘g‘ri o‘ting.
+        </p>
+      </div>
+
+      <div class="bots-grid">
+        <article class="bot-card reveal" style="--glow:rgba(95,170,255,.25)">
+          <div class="bot-head">
+            <div class="bot-icon">♫</div>
+            <div>
+              <h3 class="bot-name">Musiqa bot</h3>
+              <div class="bot-username">@maxsaveuz_bot</div>
+            </div>
+          </div>
+          <p>
+            Musiqa qidirish va musiqaga oid imkoniyatlardan foydalanish
+            uchun yaratilgan Telegram loyiham.
+          </p>
+          <div class="bot-footer">
+            <span class="bot-label">MUSIC PROJECT</span>
+            <a class="bot-link" href="https://t.me/maxsaveuz_bot"
+              target="_blank" rel="noopener noreferrer">Botni ochish <span>↗</span></a>
+          </div>
+        </article>
+
+        <article class="bot-card reveal" style="--glow:rgba(255,105,105,.2)">
+          <div class="bot-head">
+            <div class="bot-icon" style="color:#ff9999">↗</div>
+            <div>
+              <h3 class="bot-name">Nakrutka bot</h3>
+              <div class="bot-username">@seende_bot</div>
+            </div>
+          </div>
+          <p>
+            Ijtimoiy tarmoqlar xizmatlariga mo‘ljallangan loyiha.
+            Bot imkoniyatlari bilan Telegram orqali tanishing.
+          </p>
+          <div class="bot-footer">
+            <span class="bot-label" style="color:#ff9999">SOCIAL PROJECT</span>
+            <a class="bot-link" href="https://t.me/seende_bot"
+              target="_blank" rel="noopener noreferrer">Botni ochish <span>↗</span></a>
+          </div>
+        </article>
+
+        <article class="bot-card reveal" style="--glow:rgba(163,247,107,.2)">
+          <div class="bot-head">
+            <div class="bot-icon">⌘</div>
+            <div>
+              <h3 class="bot-name">Maker bot</h3>
+              <div class="bot-username">@makeruz_abot</div>
+            </div>
+          </div>
+          <p>
+            Maker loyiham. Bot bilan tanishish va mavjud funksiyalarini
+            sinab ko‘rish uchun Telegram sahifasiga o‘ting.
+          </p>
+          <div class="bot-footer">
+            <span class="bot-label">MAKER PROJECT</span>
+            <a class="bot-link" href="https://t.me/makeruz_abot"
+              target="_blank" rel="noopener noreferrer">Botni ochish <span>↗</span></a>
+          </div>
+        </article>
+
+        <article class="bot-card reveal" style="--glow:rgba(190,140,255,.2)">
+          <div class="bot-head">
+            <div class="bot-icon" style="color:#c5a4ff">&lt;/&gt;</div>
+            <div>
+              <h3 class="bot-name">Yangi loyihalar</h3>
+              <div class="bot-username">Tez orada</div>
+            </div>
+          </div>
+          <p>
+            Yangi g‘oyalar, dasturlash tajribalari va kelajakdagi
+            loyihalarim ustida ishlashda davom etaman.
+          </p>
+          <div class="bot-footer">
+            <span class="bot-label" style="color:#c5a4ff">COMING NEXT</span>
+            <a class="bot-link" href="https://t.me/dasturchi_ou"
+              target="_blank" rel="noopener noreferrer">Kuzatib boring <span>↗</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <div class="section-kicker">03 — Xizmatlar</div>
+          <h2 class="section-title">Nima yaratib bera olaman?</h2>
+        </div>
+        <p class="section-desc">
+          Loyihangiz haqida gaplashamiz va unga mos yechimni birgalikda
+          aniqlaymiz.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service reveal">
+          <span class="service-number">01 / PHP</span>
+          <h3>Telegram botlar</h3>
+          <p>Buyurtma asosida botlar, menyular, admin funksiyalari va avtomatlashtirish imkoniyatlari.</p>
+        </article>
+
+        <article class="service reveal">
+          <span class="service-number">02 / WEB</span>
+          <h3>Web sahifalar</h3>
+          <p>Shaxsiy portfolio, reklama sahifasi va mobil qurilmalarga mos web dizaynlar.</p>
+        </article>
+
+        <article class="service reveal">
+          <span class="service-number">03 / IDEA</span>
+          <h3>Individual loyihalar</h3>
+          <p>G‘oyangizni muhokama qilish, kerakli funksiyalarni belgilash va loyiha ustida ishlash.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-box reveal">
+        <div class="section-kicker">04 — Aloqa</div>
+        <h2>Loyihangiz bormi?<br><span style="color:var(--green)">Birgalikda yaratamiz.</span></h2>
+        <p>
+          Telegram bot yoki web sayt kerakmi? Menga yozing,
+          g‘oyangizni muhokama qilamiz.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://t.me/dasturchi_ou"
+            target="_blank" rel="noopener noreferrer">Admin bilan bog‘lan ↗</a>
+          <a class="btn btn-secondary" href="#bots">Botlarimni ko‘r</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="#home">dev<span>coder.</span></a>
+    <p>© <span id="year"></span> Devcoder. Barcha huquqlar himoyalangan.</p>
+    <div class="footer-links">
+      <a href="#about">Men haqimda</a>
+      <a href="#bots">Botlarim</a>
+      <a href="https://t.me/dasturchi_ou" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+    </div>
   </div>
 </footer>
 
-</div>
+<script>
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+
+menuToggle.addEventListener('click', () => {
+  const isOpen = navLinks.classList.toggle('open');
+  menuToggle.setAttribute('aria-expanded', String(isOpen));
+  menuToggle.setAttribute('aria-label',
+    isOpen ? 'Menyuni yopish' : 'Menyuni ochish');
+  menuToggle.textContent = isOpen ? '×' : '☰';
+});
+
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Menyuni ochish');
+    menuToggle.textContent = '☰';
+  });
+});
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const revealElements = document.querySelectorAll('.reveal');
+
+if ('IntersectionObserver' in window &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealElements.forEach(element => observer.observe(element));
+} else {
+  revealElements.forEach(element => element.classList.add('visible'));
+}
+</script>
+
 </body>
 </html>
