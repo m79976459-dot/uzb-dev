@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Yordamchisi</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    .question { font-size: 18px; margin-bottom: 16px; }
+    .option { margin: 8px 0; padding: 8px; background: #f5f5f5; border-radius: 6px; }
+    button { margin-top: 16px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #answer { margin-top: 20px; padding: 12px; background: #e8f5e9; border-radius: 6px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="question">Savol: Avtomobil haydashda xavfsizlik kamarini qachon taqish kerak?</div>
+  <div class="option">A. Faqat shahar ichida</div>
+  <div class="option">B. Faqat katta yo'lda</div>
+  <div class="option">C. Har doim harakatlanishdan oldin</div>
+  <div class="option">D. Faqat tezlik 60 km/soatdan oshganda</div>
+
+  <button onclick="showAnswer()">Javobni ko'rish</button>
+  <div id="answer"></div>
+
+  <script>
+    // Diqqat: API kalitni bu yerga yozmang! Ishlab chiqish uchun vaqtincha ishlatib, keyin o'chiring.
+    // Yaxshiroq yechim: o'zingizning backend proksingizdan foydalaning.
+    const GROQ_API_KEY = 'gsk_sizning_kalitingiz';
+
+    async function showAnswer() {
+      const answerDiv = document.getElementById('answer');
+      answerDiv.style.display = 'block';
+      answerDiv.textContent = 'Javob olinmoqda...';
+
+      const question = document.querySelector('.question').innerText;
+      const options = Array.from(document.querySelectorAll('.option'))
+        .map(el => el.innerText).join('\n');
+
+      const prompt = `Quyidagi test savoliga to'g'ri javobni faqat bitta harf bilan qaytaring (A/B/C/D), hech qanday tushuntirish yozmang.\n\n${question}\n${options}`;
+
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${GROQ_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.1-8b-instant',
+            messages: [{ role: 'user', content: prompt }],
+            max_tokens: 10,
+            temperature: 0
+          })
+        });
+
+        const data = await res.json();
+        const answer = data.choices[0].message.content.trim();
+        answerDiv.textContent = 'To\'g\'ri javob: ' + answer;
+      } catch (e) {
+        answerDiv.textContent = 'Xatolik yuz berdi: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
