@@ -1,64 +1,326 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <title>Test Yordamchisi</title>
-  <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
-    .question { font-size: 18px; margin-bottom: 16px; }
-    .option { margin: 8px 0; padding: 8px; background: #f5f5f5; border-radius: 6px; }
-    button { margin-top: 16px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    #answer { margin-top: 20px; padding: 12px; background: #e8f5e9; border-radius: 6px; display: none; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mening hamyonim 🌿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --moss:#3f6b3a; --leaf:#6a9b4f; --pine:#1f3d2b; --sand:#f3ead6; --bark:#7a5a3a;
+  --clay:#c9794a; --sky:#dcebd3; --card:#fffdf6; --ink:#27331f; --mute:#6c7a60;
+  --bg1:#e3efd2; --bg2:#f6efd9; --line:#e2d8bd;
+}
+@media (prefers-color-scheme: dark){
+  :root{--card:#22301f; --ink:#eef3e2; --mute:#a5b596; --bg1:#16241a; --bg2:#1d2a1b; --line:#38482f; --sand:#2a3826; --sky:#2c4129; --pine:#cfe6b8}
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);min-height:100vh;
+  background:radial-gradient(900px 500px at 90% -10%,rgba(106,155,79,.25),transparent),linear-gradient(160deg,var(--bg1),var(--bg2));
+  padding:env(safe-area-inset-top,0) 0 40px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;color:var(--pine)}
+.deco{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.deco span{position:absolute;opacity:.18;font-size:42px}
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:18px 14px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-bottom:14px}
+header h1{font-size:30px}
+.since{background:var(--card);border:2px dashed var(--leaf);border-radius:18px 4px 18px 4px;padding:8px 14px;font-size:14px}
+.since b{color:var(--moss)}
+nav{display:flex;gap:6px;overflow-x:auto;padding:6px;background:var(--bark);border-radius:999px;margin-bottom:18px;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+nav button{flex:1 0 auto;border:0;background:transparent;color:#f3ead6;font:700 14px Nunito;padding:10px 16px;border-radius:999px;cursor:pointer;white-space:nowrap}
+nav button.on{background:var(--sand);color:var(--bark)}
+nav button:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--clay);outline-offset:2px}
+.panel{display:none}.panel.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border-radius:26px 8px 26px 8px;padding:16px;border:1px solid var(--line)}
+.stat small{color:var(--mute);font-weight:600}
+.stat .n{font:800 26px Fraunces,serif;margin-top:4px}
+.stat.big{background:linear-gradient(135deg,var(--moss),var(--leaf));color:#fff;border:0}
+.stat.big small{color:#e8f3da}.stat.big .n{color:#fff;font-size:32px}
+.plus{color:var(--moss)}.minus{color:var(--clay)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px 28px 10px 28px;padding:18px;margin-bottom:16px}
+.card h2{font-size:21px;margin-bottom:10px}
+label{display:block;font-size:13px;font-weight:700;color:var(--mute);margin:10px 0 4px}
+input,textarea,select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--sand);color:var(--ink);font:600 15px Nunito}
+textarea{min-height:90px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.btn{margin-top:14px;border:0;background:var(--moss);color:#fff;font:800 15px Nunito;padding:12px 20px;border-radius:14px 4px 14px 4px;cursor:pointer;box-shadow:0 3px 0 var(--pine)}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.btn.alt{background:var(--clay);box-shadow:0 3px 0 #8f512c}
+.btn.ghost{background:transparent;color:var(--moss);border:2px solid var(--leaf);box-shadow:none}
+.stickers{display:flex;flex-wrap:wrap;gap:6px}
+.stickers button{font-size:24px;width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--sand);cursor:pointer}
+.stickers button.on{border-color:var(--moss);background:var(--sky);transform:rotate(-8deg) scale(1.08)}
+.item{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line)}
+.item:last-child{border:0}
+.item .ic{font-size:30px;width:50px;height:50px;border-radius:50%;background:var(--sky);display:grid;place-items:center;flex:none}
+.item .mid{flex:1;min-width:0}
+.item .mid b{display:block;overflow-wrap:anywhere}
+.item .mid small{color:var(--mute)}
+.item .amt{font:800 17px Fraunces,serif;white-space:nowrap}
+.x{border:0;background:transparent;font-size:18px;cursor:pointer;opacity:.6}
+.x:hover{opacity:1}
+.empty{text-align:center;color:var(--mute);padding:24px 8px}
+.empty span{font-size:40px;display:block}
+.bar{height:20px;border-radius:99px;background:var(--sky);overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--leaf),var(--moss));border-radius:99px;transition:width .6s}
+.tag{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;background:#f6e3c2;color:#8a5a1c;cursor:pointer;border:0;margin-top:4px}
+.tag.done{background:#d6ecc3;color:#2f5a22}
+.note{font-size:13px;color:var(--mute);margin-top:6px}
+.saved{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--pine);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;transition:.3s;z-index:9}
+.saved.show{transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-  <div class="question">Savol: Avtomobil haydashda xavfsizlik kamarini qachon taqish kerak?</div>
-  <div class="option">A. Faqat shahar ichida</div>
-  <div class="option">B. Faqat katta yo'lda</div>
-  <div class="option">C. Har doim harakatlanishdan oldin</div>
-  <div class="option">D. Faqat tezlik 60 km/soatdan oshganda</div>
+<div class="deco" aria-hidden="true">
+  <span style="top:6%;left:4%">🌿</span><span style="top:18%;right:6%">🍃</span>
+  <span style="top:46%;left:2%">🌳</span><span style="top:62%;right:4%">🍄</span>
+  <span style="bottom:8%;left:10%">🌼</span><span style="bottom:14%;right:12%">🐞</span>
+  <span style="top:34%;right:30%">🦋</span>
+</div>
 
-  <button onclick="showAnswer()">Javobni ko'rish</button>
-  <div id="answer"></div>
+<div class="wrap">
+  <header>
+    <h1>🌱 Mening hamyonim</h1>
+    <div class="since" id="since"></div>
+  </header>
 
-  <script>
-    // Diqqat: API kalitni bu yerga yozmang! Ishlab chiqish uchun vaqtincha ishlatib, keyin o'chiring.
-    // Yaxshiroq yechim: o'zingizning backend proksingizdan foydalaning.
-    const GROQ_API_KEY = 'gsk_sizning_kalitingiz';
+  <nav id="nav">
+    <button data-p="home" class="on">🏡 Bosh sahifa</button>
+    <button data-p="inc">🌻 Daromad</button>
+    <button data-p="exp">🍂 Xarajat</button>
+    <button data-p="ord">📦 Buyurtmalar</button>
+    <button data-p="goal">🎯 Maqsad</button>
+  </nav>
 
-    async function showAnswer() {
-      const answerDiv = document.getElementById('answer');
-      answerDiv.style.display = 'block';
-      answerDiv.textContent = 'Javob olinmoqda...';
+  <!-- BOSH SAHIFA -->
+  <section class="panel on" id="home">
+    <div class="grid">
+      <div class="stat big"><small>💰 Hozirgi qoldiq</small><div class="n" id="sBal"></div></div>
+      <div class="stat"><small>🌻 Jami topilgan</small><div class="n plus" id="sInc"></div></div>
+      <div class="stat"><small>🍂 Jami sarflangan</small><div class="n minus" id="sExp"></div></div>
+    </div>
+    <div class="card">
+      <h2>🎯 Maqsadim</h2>
+      <div id="homeGoal"></div>
+      <div class="bar"><i id="bar" style="width:0"></i></div>
+      <div class="note" id="barTxt"></div>
+    </div>
+    <div class="card">
+      <h2>🕰 So’nggi harakatlar</h2>
+      <div id="recent"></div>
+    </div>
+  </section>
 
-      const question = document.querySelector('.question').innerText;
-      const options = Array.from(document.querySelectorAll('.option'))
-        .map(el => el.innerText).join('\n');
+  <!-- DAROMAD -->
+  <section class="panel" id="inc">
+    <div class="card">
+      <h2>🌻 Pul topdim</h2>
+      <label>Sticker tanlang</label><div class="stickers" id="stInc"></div>
+      <div class="row">
+        <div><label>Summa (so’m)</label><input type="number" id="iAmt" inputmode="numeric" min="0" placeholder="50000"></div>
+        <div><label>Qachon</label><input type="datetime-local" id="iDate"></div>
+      </div>
+      <label>Qayerdan / izoh</label><input id="iNote" placeholder="Masalan: ish haqi, sovg’a, savdo...">
+      <button class="btn" id="addInc">🌿 Qo’shish</button>
+    </div>
+    <div class="card"><h2>Daromadlar tarixi</h2><div id="listInc"></div></div>
+  </section>
 
-      const prompt = `Quyidagi test savoliga to'g'ri javobni faqat bitta harf bilan qaytaring (A/B/C/D), hech qanday tushuntirish yozmang.\n\n${question}\n${options}`;
+  <!-- XARAJAT -->
+  <section class="panel" id="exp">
+    <div class="card">
+      <h2>🍂 Pul ishlatdim</h2>
+      <label>Sticker tanlang</label><div class="stickers" id="stExp"></div>
+      <div class="row">
+        <div><label>Summa (so’m)</label><input type="number" id="eAmt" inputmode="numeric" min="0" placeholder="20000"></div>
+        <div><label>Qachon</label><input type="datetime-local" id="eDate"></div>
+      </div>
+      <label>Nimaga ishlatdim</label><input id="eNote" placeholder="Masalan: tushlik, yo’l kira, kitob...">
+      <button class="btn alt" id="addExp">🍁 Qo’shish</button>
+    </div>
+    <div class="card"><h2>Xarajatlar tarixi</h2><div id="listExp"></div></div>
+  </section>
 
-      try {
-        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${GROQ_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: 'llama-3.1-8b-instant',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 10,
-            temperature: 0
-          })
-        });
+  <!-- BUYURTMALAR -->
+  <section class="panel" id="ord">
+    <div class="card">
+      <h2>📦 Yangi buyurtma</h2>
+      <label>Sticker tanlang</label><div class="stickers" id="stOrd"></div>
+      <label>Nima buyurtma qildim</label><input id="oName" placeholder="Masalan: quloqchin, krossovka...">
+      <div class="row">
+        <div><label>Narxi (so’m)</label><input type="number" id="oAmt" inputmode="numeric" min="0" placeholder="150000"></div>
+        <div><label>Qachon</label><input type="datetime-local" id="oDate"></div>
+      </div>
+      <label>Qayerdan / izoh</label><input id="oNote" placeholder="Do’kon, sayt, buyurtma raqami...">
+      <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="oCut" style="width:auto" checked> Narxni xarajatlarga ham qo’shish</label>
+      <button class="btn" id="addOrd">📦 Saqlash</button>
+    </div>
+    <div class="card"><h2>Buyurtmalarim</h2><div id="listOrd"></div></div>
+  </section>
 
-        const data = await res.json();
-        const answer = data.choices[0].message.content.trim();
-        answerDiv.textContent = 'To\'g\'ri javob: ' + answer;
-      } catch (e) {
-        answerDiv.textContent = 'Xatolik yuz berdi: ' + e.message;
-      }
-    }
-  </script>
+  <!-- MAQSAD -->
+  <section class="panel" id="goal">
+    <div class="card">
+      <h2>🎯 Nima uchun pul yig’yapman?</h2>
+      <label>Maqsadim</label><input id="gWhy" placeholder="Masalan: yangi telefon, sayohat, o’qish uchun...">
+      <label>Kerakli summa (so’m)</label><input type="number" id="gTarget" inputmode="numeric" min="0" placeholder="5000000">
+      <label>Yig’ishni boshlagan sana</label><input type="datetime-local" id="gStart">
+      <label>Shaxsiy eslatmalar</label><textarea id="gNotes" placeholder="O’zingizga xat yozing: nima uchun bu muhim, qanday qilib yig’ish kerak..."></textarea>
+      <button class="btn" id="saveGoal">🌳 Saqlash</button>
+    </div>
+    <div class="card">
+      <h2>💾 Zaxira nusxa</h2>
+      <p class="note">Ma’lumotlar shu brauzerda saqlanadi. Telefonni almashtirsangiz yoki tozalasangiz yo’qolmasligi uchun vaqti-vaqti bilan nusxa oling.</p>
+      <button class="btn ghost" id="exp2">⬇ Yuklab olish</button>
+      <button class="btn ghost" id="imp2">⬆ Qaytarish</button>
+      <input type="file" id="file" accept=".json" hidden>
+      <button class="btn ghost" id="reset" style="color:var(--clay);border-color:var(--clay)">🗑 Hammasini tozalash</button>
+    </div>
+  </section>
+</div>
+<div class="saved" id="toast">✔ Saqlandi</div>
+
+<script>
+const KEY="mening_hamyonim_v1";
+const ST={inc:["💵","💼","🎁","🛒","🌾","🏆","💎","🐝"],exp:["🍔","🚌","📚","👕","☕","💊","🎮","🏠"],ord:["📦","📱","🎧","👟","🎒","📖","🪴","🧸"]};
+const sel={inc:ST.inc[0],exp:ST.exp[0],ord:ST.ord[0]};
+let S=load();
+
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.start)return d}catch(e){}
+  return {start:new Date().toISOString(),why:"",target:0,notes:"",inc:[],exp:[],ord:[]};
+}
+function save(msg){
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  const t=document.getElementById("toast");t.textContent="✔ "+(msg||"Saqlandi");t.classList.add("show");
+  clearTimeout(save.t);save.t=setTimeout(()=>t.classList.remove("show"),1400);
+}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money=n=>Math.round(n).toLocaleString("ru-RU")+" so’m";
+const toLocalInput=d=>{const x=new Date(d);x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,16)};
+const fmt=d=>new Date(d).toLocaleString("uz-UZ",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
+const sum=a=>a.reduce((t,x)=>t+(+x.amt||0),0);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+// menyu
+$("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id===b.dataset.p));
+});
+
+// stikerlar
+function buildStickers(kind,id){
+  const box=$(id);
+  box.innerHTML=ST[kind].map(s=>`<button type="button" data-s="${s}" class="${s===sel[kind]?"on":""}">${s}</button>`).join("");
+  box.onclick=e=>{const b=e.target.closest("button");if(!b)return;sel[kind]=b.dataset.s;buildStickers(kind,id)};
+}
+buildStickers("inc","stInc");buildStickers("exp","stExp");buildStickers("ord","stOrd");
+
+function resetDates(){["iDate","eDate","oDate"].forEach(i=>$(i).value=toLocalInput(new Date()))}
+resetDates();
+
+// qo'shish
+function addMoney(kind,amtId,noteId,dateId){
+  const amt=+$(amtId).value;
+  if(!amt||amt<=0){$(amtId).focus();return}
+  S[kind].unshift({id:uid(),amt,note:$(noteId).value.trim(),date:new Date($(dateId).value||Date.now()).toISOString(),icon:sel[kind]});
+  $(amtId).value="";$(noteId).value="";resetDates();
+  save(kind==="inc"?"Daromad qo’shildi":"Xarajat qo’shildi");render();
+}
+$("addInc").onclick=()=>addMoney("inc","iAmt","iNote","iDate");
+$("addExp").onclick=()=>addMoney("exp","eAmt","eNote","eDate");
+$("addOrd").onclick=()=>{
+  const name=$("oName").value.trim(),amt=+$("oAmt").value;
+  if(!name){$("oName").focus();return}
+  const date=new Date($("oDate").value||Date.now()).toISOString();
+  const o={id:uid(),name,amt:amt||0,note:$("oNote").value.trim(),date,icon:sel.ord,done:false};
+  if($("oCut").checked&&amt>0){const e={id:uid(),amt,note:"Buyurtma: "+name,date,icon:sel.ord};S.exp.unshift(e);o.expId=e.id}
+  S.ord.unshift(o);
+  $("oName").value="";$("oAmt").value="";$("oNote").value="";resetDates();
+  save("Buyurtma saqlandi");render();
+};
+$("saveGoal").onclick=()=>{
+  S.why=$("gWhy").value.trim();S.target=+$("gTarget").value||0;S.notes=$("gNotes").value;
+  if($("gStart").value)S.start=new Date($("gStart").value).toISOString();
+  save("Maqsad saqlandi");render();
+};
+
+// o'chirish va holat
+document.addEventListener("click",e=>{
+  const d=e.target.closest("[data-del]");
+  if(d){
+    const [k,id]=d.dataset.del.split(":");
+    if(!confirm("O’chirilsinmi?"))return;
+    if(k==="ord"){const o=S.ord.find(x=>x.id===id);if(o&&o.expId&&confirm("Xarajatlardan ham o’chirilsinmi?"))S.exp=S.exp.filter(x=>x.id!==o.expId)}
+    S[k]=S[k].filter(x=>x.id!==id);save("O’chirildi");render();return;
+  }
+  const t=e.target.closest("[data-tog]");
+  if(t){const o=S.ord.find(x=>x.id===t.dataset.tog);o.done=!o.done;save();render()}
+});
+
+function items(arr,kind){
+  if(!arr.length)return `<div class="empty"><span>🌱</span>Hozircha bo’sh. Birinchisini yuqoridan qo’shing.</div>`;
+  return arr.map(x=>`<div class="item"><div class="ic">${x.icon}</div>
+    <div class="mid"><b>${esc(x.note||(kind==="inc"?"Daromad":"Xarajat"))}</b><small>${fmt(x.date)}</small></div>
+    <div class="amt ${kind==="inc"?"plus":"minus"}">${kind==="inc"?"+":"−"}${money(x.amt)}</div>
+    <button class="x" data-del="${kind}:${x.id}" aria-label="O’chirish">🗑</button></div>`).join("");
+}
+
+function render(){
+  const inc=sum(S.inc),exp=sum(S.exp),bal=inc-exp;
+  const days=Math.max(0,Math.floor((Date.now()-new Date(S.start))/864e5));
+  $("since").innerHTML=`🌱 Boshlangan: <b>${fmt(S.start)}</b> · ${days} kun`;
+  $("sBal").textContent=money(bal);$("sInc").textContent=money(inc);$("sExp").textContent=money(exp);
+  $("sBal").style.color="#fff";
+
+  $("homeGoal").innerHTML=S.why?`<b style="font-size:18px">${esc(S.why)}</b>`:`<span class="note">Maqsad hali yozilmagan. «🎯 Maqsad» bo’limiga o’ting.</span>`;
+  const pct=S.target>0?Math.max(0,Math.min(100,bal/S.target*100)):0;
+  $("bar").style.width=pct+"%";
+  $("barTxt").textContent=S.target>0?`${money(Math.max(bal,0))} / ${money(S.target)} · ${pct.toFixed(1)}% · yana ${money(Math.max(S.target-bal,0))} kerak`:"Kerakli summani belgilang.";
+
+  const all=[...S.inc.map(x=>({...x,k:"inc"})),...S.exp.map(x=>({...x,k:"exp"}))].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,8);
+  $("recent").innerHTML=all.length?all.map(x=>`<div class="item"><div class="ic">${x.icon}</div><div class="mid"><b>${esc(x.note||(x.k==="inc"?"Daromad":"Xarajat"))}</b><small>${fmt(x.date)}</small></div><div class="amt ${x.k==="inc"?"plus":"minus"}">${x.k==="inc"?"+":"−"}${money(x.amt)}</div></div>`).join(""):`<div class="empty"><span>🍃</span>Hali harakat yo’q.</div>`;
+
+  $("listInc").innerHTML=items(S.inc,"inc");
+  $("listExp").innerHTML=items(S.exp,"exp");
+  $("listOrd").innerHTML=S.ord.length?S.ord.map(o=>`<div class="item"><div class="ic">${o.icon}</div>
+    <div class="mid"><b>${esc(o.name)}</b><small>${fmt(o.date)}${o.note?" · "+esc(o.note):""}</small><br>
+    <button class="tag ${o.done?"done":""}" data-tog="${o.id}">${o.done?"✅ Yetib keldi":"⏳ Yo’lda"}</button></div>
+    <div class="amt">${o.amt?money(o.amt):""}</div>
+    <button class="x" data-del="ord:${o.id}" aria-label="O’chirish">🗑</button></div>`).join(""):`<div class="empty"><span>📦</span>Hali buyurtma yo’q.</div>`;
+
+  $("gWhy").value=S.why;$("gTarget").value=S.target||"";$("gNotes").value=S.notes;$("gStart").value=toLocalInput(S.start);
+}
+
+// zaxira
+$("exp2").onclick=()=>{
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
+  a.download="hamyon-zaxira.json";a.click();
+};
+$("imp2").onclick=()=>$("file").click();
+$("file").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.start)throw 0;S=d;save("Qaytarildi");render()}catch(x){alert("Fayl noto’g’ri.")}};
+  r.readAsText(f);
+};
+$("reset").onclick=()=>{
+  if(confirm("Barcha ma’lumot o’chadi. Davom etasizmi?")){
+    S={start:new Date().toISOString(),why:"",target:0,notes:"",inc:[],exp:[],ord:[]};save("Tozalandi");render();
+  }
+};
+
+// sahifaga kirgan paytda boshlanish sanasi saqlanadi
+save("Xush kelibsiz");
+render();
+</script>
 </body>
 </html>
